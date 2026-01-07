@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  params: Promise<{
-    locale: Locale;
-  }>;
+  params: {
+    locale: string;
+  };
 }
 
 /**
@@ -32,11 +32,11 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: RootLayoutProps) {
-  const { locale } = await params;
+  const locale = params.locale as Locale;
   const direction = getDirection(locale);
 
   return (

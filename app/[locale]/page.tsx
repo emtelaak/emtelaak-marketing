@@ -5,16 +5,16 @@ import { ComponentRenderer } from '@/components/cms/ComponentRenderer';
 import { getDirection, type Locale } from '@/lib/i18n';
 
 interface HomeProps {
-  params: Promise<{
-    locale: Locale;
-  }>;
+  params: {
+    locale: string;
+  };
 }
 
 /**
  * Generate metadata for homepage
  */
 export async function generateMetadata({ params }: HomeProps): Promise<Metadata> {
-  const { locale } = await params;
+  const locale = params.locale as Locale;
   const page = await getPage('home');
 
   if (!page) {
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
  * Homepage component with ISR
  */
 export default async function Home({ params }: HomeProps) {
-  const { locale } = await params;
+  const locale = params.locale as Locale;
   const page = await getPage('home');
 
   if (!page) {

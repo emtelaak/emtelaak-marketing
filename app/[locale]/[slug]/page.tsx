@@ -6,10 +6,10 @@ import { ComponentRenderer } from '@/components/cms/ComponentRenderer';
 import { getDirection, type Locale, locales } from '@/lib/i18n';
 
 interface PageProps {
-  params: Promise<{
-    locale: Locale;
+  params: {
+    locale: string;
     slug: string;
-  }>;
+  };
 }
 
 /**
@@ -37,7 +37,8 @@ export async function generateStaticParams() {
  * Generate metadata for SEO
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale, slug } = await params;
+  const locale = params.locale as Locale;
+  const slug = params.slug;
   const page = await getPage(slug);
 
   if (!page) {
@@ -70,7 +71,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  * Dynamic page component with ISR
  */
 export default async function Page({ params }: PageProps) {
-  const { locale, slug } = await params;
+  const locale = params.locale as Locale;
+  const slug = params.slug;
   const page = await getPage(slug);
 
   if (!page) {
