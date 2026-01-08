@@ -1,0 +1,5 @@
+{
+  "buildCommand": "rm -rf .next .tsbuildinfo node_modules/.cache && pnpm install && pnpm run build",
+  "framework": "nextjs",
+  "installCommand": "pnpm install"
+}
