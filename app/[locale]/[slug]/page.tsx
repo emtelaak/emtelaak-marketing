@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPage, listPages } from '@/lib/cms/api-client';
 import { getPageContent, getTitle, getMetaDescription } from '@/lib/cms/bilingual';
 import { ComponentRenderer } from '@/components/cms/ComponentRenderer';
 import { getDirection, type Locale, locales } from '@/lib/i18n';
-
 
 
 /**
@@ -14,10 +13,10 @@ import { getDirection, type Locale, locales } from '@/lib/i18n';
 export async function generateStaticParams() {
   const pages = await listPages();
   
-  const params: { locale: Locale; slug: string }[] = [];
-  
-  for (const page of pages) {
-    for (const locale of locales) {
+  // Generate params for all locale/slug combinations
+  const params = [];
+  for (const locale of locales) {
+    for (const page of pages) {
       params.push({
         locale,
         slug: page.slug,
@@ -31,67 +30,53 @@ export async function generateStaticParams() {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata(props: PageProps<'/[locale]/[slug]'>): Promise<Metadata> {
-  const { locale, slug } = await props.params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
   const page = await getPage(slug);
 
   if (!page) {
     return {
       title: 'Page Not Found',
+      description: 'The requested page could not be found',
     };
   }
 
-  const title = getTitle(page.title, page.titleAr, locale);
-  const description = getMetaDescription(page.metaDescription, page.metaDescriptionAr, locale);
-
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      locale: locale === 'ar' ? 'ar_EG' : 'en_US',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    title: getTitle(page, locale as Locale),
+    description: getMetaDescription(page, locale as Locale) || 'Emtelaak - Invest in fractional real estate ownership',
   };
 }
 
 /**
+ * Revalidate every 5 minutes (ISR)
+ */
+export const revalidate = 300;
+
+/**
  * Dynamic page component with ISR
  */
-export default async function Page(props: PageProps<'/[locale]/[slug]'>): Promise<JSX.Element> {
-  const { locale, slug } = await props.params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
   const page = await getPage(slug);
 
   if (!page) {
     notFound();
   }
 
-  const content = getPageContent(page.contentJson, page.contentJsonAr, locale);
-  const direction = getDirection(locale);
-
-  if (!content || !content.root) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>No content available</p>
-      </div>
-    );
-  }
+  const content = getPageContent(page, locale as Locale);
+  const direction = getDirection(locale as Locale);
 
   return (
     <div dir={direction} className="min-h-screen">
-      <ComponentRenderer component={content.root} locale={locale} />
+      <ComponentRenderer components={content} />
     </div>
   );
 }
-
-/**
- * ISR Configuration
- * Revalidate every 5 minutes
- */
-export const revalidate = 300;

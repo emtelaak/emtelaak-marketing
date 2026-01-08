@@ -25,16 +25,22 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout(props: LayoutProps<'/[locale]'>): Promise<JSX.Element> {
-  const { locale } = await props.params;
-  const direction = getDirection(locale);
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const direction = getDirection(locale as Locale);
 
   return (
     <html lang={locale} dir={direction}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {props.children}
+        {children}
       </body>
     </html>
   );
