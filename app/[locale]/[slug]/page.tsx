@@ -9,22 +9,37 @@ import { getDirection, type Locale, locales } from '@/lib/i18n';
 /**
  * Generate static params for ISR
  * This pre-renders all published pages at build time
+ * Returns empty array if API is unavailable (pages will be generated on-demand)
  */
 export async function generateStaticParams() {
-  const pages = await listPages();
-  
-  // Generate params for all locale/slug combinations
-  const params = [];
-  for (const locale of locales) {
-    for (const page of pages) {
-      params.push({
-        locale,
-        slug: page.slug,
-      });
+  try {
+    const pages = await listPages();
+    
+    // If no pages or API error, return empty array
+    // Pages will be generated on-demand with ISR
+    if (!pages || pages.length === 0) {
+      console.log('No pages found, using on-demand generation');
+      return [];
     }
+    
+    // Generate params for all locale/slug combinations
+    const params = [];
+    for (const locale of locales) {
+      for (const page of pages) {
+        params.push({
+          locale,
+          slug: page.slug,
+        });
+      }
+    }
+    
+    return params;
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    // Return empty array to allow build to continue
+    // Pages will be generated on-demand
+    return [];
   }
-  
-  return params;
 }
 
 /**
@@ -55,6 +70,11 @@ export async function generateMetadata({
  * Revalidate every 5 minutes (ISR)
  */
 export const revalidate = 300;
+
+/**
+ * Allow dynamic params (on-demand generation for pages not in generateStaticParams)
+ */
+export const dynamicParams = true;
 
 /**
  * Dynamic page component with ISR
