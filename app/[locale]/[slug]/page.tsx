@@ -64,7 +64,7 @@ export async function generateMetadata(props: PageProps<'/[locale]/[slug]'>): Pr
 /**
  * Dynamic page component with ISR
  */
-export default async function Page(props: PageProps<'/[locale]/[slug]'>) {
+export default async function Page(props: PageProps<'/[locale]/[slug]'>): Promise<JSX.Element> {
   const { locale, slug } = await props.params;
   const page = await getPage(slug);
 

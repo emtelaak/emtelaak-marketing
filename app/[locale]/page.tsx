@@ -41,7 +41,7 @@ export async function generateMetadata(props: PageProps<'/[locale]'>): Promise<M
 /**
  * Homepage component with ISR
  */
-export default async function Home(props: PageProps<'/[locale]'>) {
+export default async function Home(props: PageProps<'/[locale]'>): Promise<JSX.Element> {
   const { locale } = await props.params;
   const page = await getPage('home');
 

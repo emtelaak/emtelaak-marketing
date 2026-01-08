@@ -25,7 +25,7 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout(props: LayoutProps<'/[locale]'>) {
+export default async function RootLayout(props: LayoutProps<'/[locale]'>): Promise<JSX.Element> {
   const { locale } = await props.params;
   const direction = getDirection(locale);
 
