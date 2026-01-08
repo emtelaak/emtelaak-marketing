@@ -18,13 +18,6 @@ export const metadata: Metadata = {
   description: "Invest in fractional real estate ownership with Emtelaak",
 };
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-  params: Promise<{
-    locale: string;
-  }>;
-}
-
 /**
  * Generate static params for all locales
  */
@@ -32,11 +25,8 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
-  const { locale } = await params;
+export default async function RootLayout(props: LayoutProps<'/[locale]'>) {
+  const { locale } = await props.params;
   const direction = getDirection(locale);
 
   return (
@@ -44,7 +34,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {props.children}
       </body>
     </html>
   );

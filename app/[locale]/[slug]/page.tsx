@@ -5,12 +5,7 @@ import { getPageContent, getTitle, getMetaDescription } from '@/lib/cms/bilingua
 import { ComponentRenderer } from '@/components/cms/ComponentRenderer';
 import { getDirection, type Locale, locales } from '@/lib/i18n';
 
-interface PageProps {
-  params: Promise<{
-    locale: string;
-    slug: string;
-  }>;
-}
+
 
 /**
  * Generate static params for ISR
@@ -36,8 +31,8 @@ export async function generateStaticParams() {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale, slug } = await params;
+export async function generateMetadata(props: PageProps<'/[locale]/[slug]'>): Promise<Metadata> {
+  const { locale, slug } = await props.params;
   const page = await getPage(slug);
 
   if (!page) {
@@ -69,8 +64,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /**
  * Dynamic page component with ISR
  */
-export default async function Page({ params }: PageProps) {
-  const { locale, slug } = await params;
+export default async function Page(props: PageProps<'/[locale]/[slug]'>) {
+  const { locale, slug } = await props.params;
   const page = await getPage(slug);
 
   if (!page) {
