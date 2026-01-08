@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable i18n routing
-  i18n: {
-    locales: ["en", "ar"],
-    defaultLocale: "en",
-    localeDetection: false, // Middleware handles detection
-  },
-
   // Image optimization for S3 images
   images: {
     remotePatterns: [

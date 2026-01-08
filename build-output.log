@@ -1,0 +1,38 @@
+
+> emtelaak-marketing@0.1.0 prebuild /home/ubuntu/emtelaak-marketing
+> rm -rf .next .tsbuildinfo
+
+
+> emtelaak-marketing@0.1.0 build /home/ubuntu/emtelaak-marketing
+> next typegen && next build
+
+Generating route types...
+✓ Types generated successfully
+⚠ i18n configuration in next.config.ts is unsupported in App Router.
+Learn more about internationalization in App Router: https://nextjs.org/docs/app/building-your-application/routing/internationalization
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  ✓ optimizeCss
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.5s
+  Running TypeScript ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/10) ...
+Error occurred prerendering page "/en". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: The provided export path '/' doesn't match the '/[locale]' page.
+Read more: https://nextjs.org/docs/messages/export-path-mismatch
+    at Array.map (<anonymous>)
+Error occurred prerendering page "/ar". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: The provided export path '/' doesn't match the '/[locale]' page.
+Read more: https://nextjs.org/docs/messages/export-path-mismatch
+    at Array.map (<anonymous>)
+Export encountered an error on /[locale]/page: /en, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.
