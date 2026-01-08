@@ -23,8 +23,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: getTitle(page, locale as Locale),
-    description: getMetaDescription(page, locale as Locale) || 'Invest in fractional real estate ownership with Emtelaak',
+    title: getTitle(page.title, page.titleAr, locale as Locale),
+    description: getMetaDescription(page.metaDescription, page.metaDescriptionAr, locale as Locale) || 'Invest in fractional real estate ownership with Emtelaak',
   };
 }
 
@@ -55,12 +55,14 @@ export default async function Home({
     );
   }
 
-  const content = getPageContent(page, locale as Locale);
+  const content = getPageContent(page.contentJson, page.contentJsonAr, locale as Locale);
   const direction = getDirection(locale as Locale);
 
   return (
     <div dir={direction} className="min-h-screen">
-      <ComponentRenderer components={content} />
+      {content.map((component: any, index: number) => (
+        <ComponentRenderer key={index} component={component} locale={locale as Locale} />
+      ))}
     </div>
   );
 }
