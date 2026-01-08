@@ -8,38 +8,13 @@ import { getDirection, type Locale, locales } from '@/lib/i18n';
 
 /**
  * Generate static params for ISR
- * This pre-renders all published pages at build time
- * Returns empty array if API is unavailable (pages will be generated on-demand)
+ * Returns empty array to use on-demand generation
+ * Pages will be generated on first request and cached
  */
 export async function generateStaticParams() {
-  try {
-    const pages = await listPages();
-    
-    // If no pages or API error, return empty array
-    // Pages will be generated on-demand with ISR
-    if (!pages || pages.length === 0) {
-      console.log('No pages found, using on-demand generation');
-      return [];
-    }
-    
-    // Generate params for all locale/slug combinations
-    const params = [];
-    for (const locale of locales) {
-      for (const page of pages) {
-        params.push({
-          locale,
-          slug: page.slug,
-        });
-      }
-    }
-    
-    return params;
-  } catch (error) {
-    console.error('Error in generateStaticParams:', error);
-    // Return empty array to allow build to continue
-    // Pages will be generated on-demand
-    return [];
-  }
+  // Return empty array to skip static generation at build time
+  // All pages will be generated on-demand with ISR
+  return [];
 }
 
 /**

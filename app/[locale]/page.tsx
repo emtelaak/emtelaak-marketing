@@ -29,6 +29,16 @@ export async function generateMetadata({
 }
 
 /**
+ * Generate static params for all locales
+ */
+export async function generateStaticParams() {
+  return [
+    { locale: 'en' },
+    { locale: 'ar' },
+  ];
+}
+
+/**
  * Revalidate every 5 minutes (ISR)
  */
 export const revalidate = 300;
